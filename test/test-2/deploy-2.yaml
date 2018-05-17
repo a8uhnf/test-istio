@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hello-test-2
+  labels:
+    app: test-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-2
+  template:
+    metadata:
+      labels:
+        app: test-2
+    spec:
+      containers:
+      - name: test-2
+        image: a8uhnf/test-2:1.0
+        ports:
+        - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: test-2-service
+  annotations:
+    service.alpha.kubernetes.io/app-protocols: '{"my-https-port":"HTTP"}'
+spec:
+  type: NodePort
+  selector:
+    app: test-2
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+    name: test-2
